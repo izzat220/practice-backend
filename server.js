@@ -18,26 +18,21 @@ app.use(bodyParser.json());
 app.use(cors());
 
 //ROUTES
-app.get("/hello", (req, res) => {
-	res.send("secret");
-});
-
-app.post("/postStuff", (req, res) => {
-	//firstName
-	//lastName
-	//password
-	//age
-
-	let formData = req.body;
-	let newUser = new UsersModel(formData);
-	newUser.save();
-	res.json({ success: "SUCCESS CHECK DB" });
-});
-
-app.get("/getStuff", async (req, res) => {
+app.get("/getUsers", async (req, res) => {
 	let users = await UsersModel.find();
 
-	res.json({ results: users });
+	res.json(users);
+});
+
+app.post("/updateUser", async (req, res) => {
+	let formData = req.body;
+
+	let response = await UsersModel.findOneAndUpdate(
+		{ _id: formData.userId },
+		{ firstName: formData.newFirstName }
+	);
+
+	res.json(response);
 });
 
 //LISTENING
